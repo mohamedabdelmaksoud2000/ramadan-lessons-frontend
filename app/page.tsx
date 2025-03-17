@@ -141,6 +141,20 @@ export default function HomePage() {
     return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
   }
 
+  const handleDownload = (audioUrl: string, lessonName: string) => {
+    // Create an anchor element
+    const anchor = document.createElement("a")
+    anchor.href = audioUrl
+
+    // Set download attribute with lesson name
+    anchor.download = `${lessonName}.mp3`
+
+    // Append to body, click, and remove
+    document.body.appendChild(anchor)
+    anchor.click()
+    document.body.removeChild(anchor)
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900" dir="rtl">
       {/* Header */}
@@ -229,7 +243,11 @@ export default function HomePage() {
 
                   {/* Download Button */}
                   <div className="self-end">
-                    <Button variant="outline" className="border-slate-300 text-slate-700 hover:bg-slate-100">
+                    <Button
+                      variant="outline"
+                      className="border-slate-300 text-slate-700 hover:bg-slate-100"
+                      onClick={() => handleDownload(lesson.audioUrl, lesson.name)}
+                    >
                       <Download className="ml-2 h-4 w-4" />
                       تحميل الدرس
                     </Button>
