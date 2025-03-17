@@ -142,17 +142,30 @@ export default function HomePage() {
   }
 
   const handleDownload = (audioUrl: string, lessonName: string) => {
-    // Create an anchor element
+    if (!audioUrl) {
+      console.error("Audio URL is missing or invalid.")
+      return
+    }
+  
+    // Log the URL for debugging
+    console.log("Attempting to download:", audioUrl)
+  
     const anchor = document.createElement("a")
     anchor.href = audioUrl
-
-    // Set download attribute with lesson name
-    anchor.download = `${lessonName}.mp3`
-
-    // Append to body, click, and remove
+    anchor.download = `${lessonName}.mp3` // Ensure the file extension matches the audio format
+  
+    // Append to the document, trigger click, and remove
     document.body.appendChild(anchor)
     anchor.click()
     document.body.removeChild(anchor)
+  
+    // Log success or failure
+    anchor.onload = () => {
+      console.log("Download started successfully.")
+    }
+    anchor.onerror = (e) => {
+      console.error("Download failed:", e)
+    }
   }
 
   return (
