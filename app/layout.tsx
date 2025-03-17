@@ -3,7 +3,7 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: 'رمضان كريم 2025',
-  description: 'Created with v0',
+  description: 'مجموعة من الدروس الإسلامية المميزة لشهر رمضان المبارك، استمع إليها مباشرة أو قم بتحميلها للاستماع لاحقاً',
   generator: 'megatron',
 }
 
