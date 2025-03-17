@@ -141,32 +141,36 @@ export default function HomePage() {
     return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
   }
 
-  const handleDownload = (audioUrl: string, lessonName: string) => {
-    if (!audioUrl) {
-      console.error("Audio URL is missing or invalid.")
-      return
+  const handleDownload = async (audioUrl: string, lessonName: string) => {
+    try {
+      // تحميل الملف كـ Blob
+      const response = await fetch(audioUrl);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch audio: ${response.statusText}`);
+      }
+  
+      // تحويل الاستجابة إلى Blob
+      const blob = await response.blob();
+  
+      // إنشاء رابط مؤقت لتنزيل الملف
+      const url = window.URL.createObjectURL(blob);
+  
+      // إنشاء عنصر <a> لتنزيل الملف
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = `${lessonName}.mp3`; // اسم الملف الذي سيتم تنزيله
+      document.body.appendChild(anchor);
+  
+      // النقر على الرابط لبدء التنزيل
+      anchor.click();
+  
+      // تنظيف الرابط المؤقت
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(anchor);
+    } catch (error) {
+      console.error("Error downloading audio:", error);
     }
-  
-    // Log the URL for debugging
-    console.log("Attempting to download:", audioUrl)
-  
-    const anchor = document.createElement("a")
-    anchor.href = audioUrl
-    anchor.download = `${lessonName}.mp3` // Ensure the file extension matches the audio format
-  
-    // Append to the document, trigger click, and remove
-    document.body.appendChild(anchor)
-    anchor.click()
-    document.body.removeChild(anchor)
-  
-    // Log success or failure
-    anchor.onload = () => {
-      console.log("Download started successfully.")
-    }
-    anchor.onerror = (e) => {
-      console.error("Download failed:", e)
-    }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900" dir="rtl">
